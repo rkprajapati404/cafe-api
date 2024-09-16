@@ -7,7 +7,7 @@ const cafeSchema = new Schema({
     description: { type: String, required: true },
     logo: { type: String },
     location: { type: String, required: true },
-    id: { type: String, default: () => uuidv4(), unique: true }
+    _id: { type: String, default: uuidv4 },
 });
 
 module.exports = mongoose.model('Cafe', cafeSchema);

@@ -3,16 +3,35 @@ const router = express.Router();
 const Cafe = require('../models/cafe');
 
 
-// router.get('/', async (req, res) => {
-//     try {
-//         res.body({ "hello": "ddd" })
-//     } catch (error) {
-//         res.status(400).json({
-//             success: false,
-//             error: error.message
-//         });
-//     }
-// });
+router.get('/', async (req, res) => {
+    try {
+        const location = req.query.location;
+        let query = {};
+        if (location) {
+            query.location = location;
+        }
+        const cafes = await Cafe.aggregate([
+            { $match: query },
+            {
+                $lookup: {
+                    from: 'employees',
+                    localField: '_id',
+                    foreignField: 'cafe',
+                    as: 'employees'
+                }
+            },
+            {
+                $addFields: {
+                    employees_count: { $size: '$employees' }
+                }
+            },
+            { $sort: { employees_count: -1 } }
+        ]);
+        res.json(cafes);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
 
 router.post('/', async (req, res) => {
     try {
@@ -25,7 +44,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update a cafe
-router.put('/cafe', async (req, res) => {
+router.put('/', async (req, res) => {
     try {
         const cafe = await Cafe.findOneAndUpdate({ id: req.body.id }, req.body, { new: true });
         res.json(cafe);
@@ -35,7 +54,7 @@ router.put('/cafe', async (req, res) => {
 });
 
 // Delete a cafe and all its employees
-router.delete('/cafe', async (req, res) => {
+router.delete('/', async (req, res) => {
     try {
         await Employee.deleteMany({ cafe: req.query.id });
         await Cafe.deleteOne({ id: req.query.id });
