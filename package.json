@@ -4,15 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "env-cmd -f ./config/dev.env nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.3",
+    "color": "^4.2.3",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "env-cmd": "^10.1.0",
     "express": "^4.21.0",
     "mongoose": "^8.6.2",
+    "nodemon": "^3.1.4",
     "uuid": "^10.0.0"
   }
 }
