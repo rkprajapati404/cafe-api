@@ -22,6 +22,25 @@ router.get('/', async (req, res) => {
     }
 });
 
+
+router.get('/:id', async (req, res) => {
+    try {
+        const employeeId = req.params.id;
+        const employee = await Employee.findById(employeeId).populate('cafe');
+
+        if (!employee) {
+            return res.status(404).json({ message: 'Employee not found' });
+        }
+
+        const now = new Date();
+        employee.days_worked = Math.floor((now - new Date(employee.start_date)) / (1000 * 60 * 60 * 24));
+
+        res.json(employee);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 router.post('/', async (req, res) => {
     try {
         const employee = new Employee(req.body);
@@ -35,7 +54,7 @@ router.post('/', async (req, res) => {
 // Update an employee
 router.put('/', async (req, res) => {
     try {
-        const employee = await Employee.findOneAndUpdate({ id: req.body.id }, req.body, { new: true });
+        const employee = await Employee.findOneAndUpdate({ _id: req.body.id }, req.body, { new: true });
         res.json(employee);
     } catch (error) {
         res.status(400).send(error.message);
