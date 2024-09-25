@@ -56,7 +56,6 @@ router.put('/', async (req, res) => {
 // Delete a cafe and all its employees
 router.delete('/', async (req, res) => {
     try {
-        await Employee.deleteMany({ cafe: req.query.id });
         await Cafe.deleteOne({ id: req.query.id });
         res.status(204).send();
     } catch (error) {
