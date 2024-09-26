@@ -22,6 +22,22 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/cafe/:cafeId', async (req, res) => {
+    try {
+        const { cafeId } = req.params;
+        console.log(cafeId);
+
+        const employees = await Employee.find({ cafe: cafeId });
+
+        if (!employees || employees.length === 0) {
+            return res.status(404).json({ message: 'No employees found for this cafe.' });
+        }
+
+        res.status(200).json(employees);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 router.get('/:id', async (req, res) => {
     try {

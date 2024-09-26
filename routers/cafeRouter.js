@@ -70,11 +70,11 @@ router.put('/', async (req, res) => {
 // Delete a cafe and all its employees
 router.delete('/', async (req, res) => {
     try {
-        await Cafe.deleteOne({ id: req.query.id });
+        await Cafe.deleteOne({ _id: req.query.id });
         res.status(204).send();
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
 
-module.exports = router;
+module.exports = router; 
