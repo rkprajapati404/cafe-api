@@ -33,6 +33,20 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const cafe = await Cafe.findById(id);
+
+        if (!cafe) {
+            return res.status(404).json({ message: 'Cafe not found' });
+        }
+        res.json(cafe);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 router.post('/', async (req, res) => {
     try {
         const cafe = new Cafe(req.body);
@@ -46,7 +60,7 @@ router.post('/', async (req, res) => {
 // Update a cafe
 router.put('/', async (req, res) => {
     try {
-        const cafe = await Cafe.findOneAndUpdate({ id: req.body.id }, req.body, { new: true });
+        const cafe = await Cafe.findOneAndUpdate({ _id: req.body.id }, req.body, { new: true });
         res.json(cafe);
     } catch (error) {
         res.status(400).send(error.message);
